@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  gps-feeder:
+    image: ghcr.io/eclipse/kuksa.val.feeders/gps:main
+    command: --host 127.0.0.1 --port 8090 --certificate /kuksa_certificates/Client.pem --cacertificate /kuksa_certificates/CA.pem --token yourtoken <optional> --file /config/gpsd_feeder.ini
+    restart: unless-stopped 
+    volumes:
+      - ${PWD}/kuksa_config:/config
+      - ${PWD}/certificates:/kuksa_certificates
+    network_mode: "host"
+    ports:
+      - 29998:29998/udp
+    depends_on:
+      - 'kuksa-val'
+  #obd-feeder:
+  #  image: ${ARCH}/kuksa-obd-feeder
+  #  restart: unless-stopped 
+  #  volumes:
+  #    - ${PWD}/kuksa_config:/config
+  #  devices:
+  #    - /dev/ttyAMA0:/dev/ttyAMA0
+  #  depends_on:
+  #    - 'kuksa-val'
+
